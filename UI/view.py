@@ -13,7 +13,7 @@ class View(ft.UserControl):
         self._controller = None
         # graphical elements
         self._title = None
-        self.ddyear = None
+        self.ddanno = None
         self.ddshape = None
         self.btn_graph = None
         self.txt_result = None
@@ -30,17 +30,24 @@ class View(ft.UserControl):
         self._page.controls.append(self._title)
 
         #ROW with some controls
-        self.txt_anno = ft.TextField(label="Anno")
+        self.ddanno = ft.Dropdown(label="Anno",on_change=self._controller.handleGraph)
+        self._controller.fillDDanni()
+        self.txt_anno= ft.ListView()
 
-        self.txt_giorni = ft.TextField(label="numGiorni")
+        self.ddstato = ft.Dropdown(label="stato")
 
 
         # button for the "creat graph" reply
-        self.btn_graph = ft.ElevatedButton(text="Crea Grafo", on_click=self._controller.handle_graph)
-        row1 = ft.Row([self.txt_anno,self.txt_giorni, self.btn_graph],
+        self.btn_avvistamenti = ft.ElevatedButton(text="avvistamenti", on_click=self._controller.avvistamenti)
+        row1 = ft.Row([self.ddanno, self.btn_avvistamenti,self.txt_anno],
                       alignment=ft.MainAxisAlignment.CENTER)
         self._page.controls.append(row1)
 
+        self.ddstato = ft.Dropdown(label="stato")
+        self.btn_analizza= ft.ElevatedButton(text="analizza", on_click=self._controller.analizza)
+        row2 = ft.Row([self.ddstato, self.btn_analizza],
+                      alignment=ft.MainAxisAlignment.CENTER)
+        self._page.controls.append(row2)
 
         # List View where the reply is printed
         self.txt_result = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
