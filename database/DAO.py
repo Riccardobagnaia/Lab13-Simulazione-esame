@@ -60,7 +60,7 @@ class DAO():
             from(
             select  s.state as stato1, s2.state as stato2, s2.`datetime` as giorni , s2.id 
             from sighting s , sighting s2  
-            where year(s2.`datetime`) = %s and year(s.`datetime`) = %s and ((datediff(s2.`datetime`,s.`datetime`)<%s and datediff(s2.`datetime`,s.`datetime`)>0)or(datediff(s.`datetime`,s2.`datetime`)<%s 
+            where year(s2.`datetime`) = %s and year(s.`datetime`) = %s and ((datediff(s2.`datetime`,s.`datetime`)<=%s and datediff(s2.`datetime`,s.`datetime`)>0)or(datediff(s.`datetime`,s2.`datetime`)<=%s 
             and datediff(s.`datetime`,s2.`datetime`)>0 )) and s2.state != s.state and ((s.state=%s and s2.state =%s)or(s2.state=%s and s.state =%s))
             group by s2.id ) as t """
 
