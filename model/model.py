@@ -38,8 +38,8 @@ class Model:
     def analizza(self,stato_sel):
         successori = self.grafo.successors(stato_sel)
         predecessori = self.grafo.predecessors(stato_sel)
-        adiacenti = self.grafo.adjacency()
-        return successori, predecessori ,adiacenti
+
+        return successori, predecessori
 
 
 

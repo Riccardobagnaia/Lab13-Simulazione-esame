@@ -49,9 +49,6 @@ class Controller:
         self._view.txt_result.controls.append(ft.Text(f"STATI SUCCESSORI A {stato_sel}"))
         for stato in succ:
             self._view.txt_result.controls.append(ft.Text(f"{stato}"))
-        self._view.txt_result.controls.append(ft.Text(f"STATI ADIACENTI A {stato_sel}"))
-        for stato in adiacenti:
-            self._view.txt_result.controls.append(ft.Text(f"{stato}"))
         self._view.update_page()
 
 
