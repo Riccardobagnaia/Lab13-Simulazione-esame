@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-import datetime
+from datetime import datetime
 
 
 @dataclass

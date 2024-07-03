@@ -38,8 +38,9 @@ class Model:
     def analizza(self,stato_sel):
         successori = self.grafo.successors(stato_sel)
         predecessori = self.grafo.predecessors(stato_sel)
+        raggiungibili = nx.bfs_tree(self.grafo,stato_sel)
 
-        return successori, predecessori
+        return successori, predecessori ,raggiungibili
 
 
 
