@@ -68,3 +68,28 @@ class DAO():
         cursor.close()
         conn.close()
         return result
+
+    @staticmethod
+    def getArco(stato1, stato2):
+        conn = DBConnect.get_connection()
+
+        result = []
+
+        cursor = conn.cursor(dictionary=True)
+
+        query = """
+                select sA.state as stato1, sB.state as stato2
+                from sighting sA , sighting sB
+                where sA.`datetime` < sB.`datetime` and sA.state=%s and sB.state=%s
+                limit 1 """
+
+        cursor.execute(query, (stato1, stato2))
+
+        for row in cursor:
+            result.append((row["stato1"], row["stato2"]))
+
+        cursor.close()
+        conn.close()
+        return result
+
+

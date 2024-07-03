@@ -31,8 +31,27 @@ class Controller:
     def handleGraph(self,e):
         anno = self._view.ddanno.value
         grafo = self._model.buildGraph(anno)
+        self.fillDD()
         print(grafo)
 
+    def fillDD(self):
+        lista = self._model.listaStati()
+        for stato in lista:
+            self._view.ddstato.options.append(ft.dropdown.Option(stato))
+        self._view.update_page()
+
     def analizza(self,e):
-        pass
+        stato_sel = self._view.ddstato.value
+        succ , prede , adiacenti =self._model.analizza(stato_sel)
+        self._view.txt_result.controls.append(ft.Text(f"STATI PRECEDENTI A {stato_sel}"))
+        for stato in prede:
+            self._view.txt_result.controls.append(ft.Text(f"{stato}"))
+        self._view.txt_result.controls.append(ft.Text(f"STATI SUCCESSORI A {stato_sel}"))
+        for stato in succ:
+            self._view.txt_result.controls.append(ft.Text(f"{stato}"))
+        self._view.txt_result.controls.append(ft.Text(f"STATI ADIACENTI A {stato_sel}"))
+        for stato in adiacenti:
+            self._view.txt_result.controls.append(ft.Text(f"{stato}"))
+        self._view.update_page()
+
 
