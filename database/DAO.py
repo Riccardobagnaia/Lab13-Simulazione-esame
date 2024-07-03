@@ -3,7 +3,7 @@ from database.DB_connect import DBConnect
 class DAO():
 
     @staticmethod
-    def getAnni():
+    def getStati():
         conn = DBConnect.get_connection()
 
         result = []
@@ -11,9 +11,8 @@ class DAO():
         cursor = conn.cursor()
 
         query = """
-           select distinct year(s.`datetime`) as anno
-            from new_ufo_sightings.sighting s 
-            order by anno asc """
+            select distinct(s.id)
+            from state s"""
 
         cursor.execute(query)
 
@@ -24,8 +23,10 @@ class DAO():
         conn.close()
         return result
 
+
+
     @staticmethod
-    def getForme(anno):
+    def getArchi():
         conn = DBConnect.get_connection()
 
         result = []
@@ -33,53 +34,9 @@ class DAO():
         cursor = conn.cursor()
 
         query = """
-                select distinct s.shape 
-                from new_ufo_sightings.sighting s 
-                where year(s.`datetime`)=%s """
-
-        cursor.execute(query,(anno,))
-
-        for row in cursor:
-            result.append(row[0])
-
-        cursor.close()
-        conn.close()
-        return result
-
-    @staticmethod
-    def getAllState():
-        conn = DBConnect.get_connection()
-
-        result = []
-
-        cursor = conn.cursor()
-
-        query = """
-                select s.ID
-                from new_ufo_sightings.state s  """
-
-        cursor.execute(query)
-
-        for row in cursor:
-            result.append((row[0]))
-
-        cursor.close()
-        conn.close()
-        return result
-
-    @staticmethod
-    def getArco():
-        conn = DBConnect.get_connection()
-
-        result = []
-
-        cursor = conn.cursor()
-
-        query = """
-            select n.*
+            select n.state1 , n.state2 
             from neighbor n 
-            where n.state1  < n.state2 
-              """
+            where n.state1  < n.state2 """
 
         cursor.execute(query)
 
@@ -91,7 +48,7 @@ class DAO():
         return result
 
     @staticmethod
-    def getPeso(stato1,stato2,anno,forma):
+    def getPeso(stato1,stato2,data,xG):
         conn = DBConnect.get_connection()
 
         result = []
@@ -99,14 +56,15 @@ class DAO():
         cursor = conn.cursor()
 
         query = """
-            select count(t.id)
+            select count(t.id) as peso
             from(
-            select s.state as st1, s2.state as st2 , s2.shape ,s2.id 
-            from sighting s , sighting s2 
-            where ((s.state=%s and s2.state =%s)or(s2.state=%s and s.state =%s) ) and year(s.`datetime`)=%s and year(s2.`datetime`)=%s and s2.shape =%s and s.shape=%s
-            group by s2.id) as t  """
+            select  s.state as stato1, s2.state as stato2, s2.`datetime` as giorni , s2.id 
+            from sighting s , sighting s2  
+            where year(s2.`datetime`) = %s and year(s.`datetime`) = %s and ((datediff(s2.`datetime`,s.`datetime`)<%s and datediff(s2.`datetime`,s.`datetime`)>0)or(datediff(s.`datetime`,s2.`datetime`)<%s 
+            and datediff(s.`datetime`,s2.`datetime`)>0 )) and s2.state != s.state and ((s.state=%s and s2.state =%s)or(s2.state=%s and s.state =%s))
+            group by s2.id ) as t """
 
-        cursor.execute(query, (stato1,stato2,stato1,stato2,anno,anno,forma,forma))
+        cursor.execute(query,(data,data,xG,xG,stato1,stato2,stato1,stato2))
 
         for row in cursor:
             result.append(row[0])
@@ -114,4 +72,3 @@ class DAO():
         cursor.close()
         conn.close()
         return result
-

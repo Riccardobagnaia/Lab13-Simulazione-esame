@@ -12,32 +12,31 @@ class Controller:
         self._listYear = []
         self._listShape = []
 
-    def fillDD(self):
-        anni = self._model.anni
-        for anno in anni:
-            self._view.ddyear.options.append(ft.dropdown.Option(key=anno))
-        self._view.update_page()
-    def fillForma(self,e):
-        anno_sel = self._view.ddyear.value
-        print(anno_sel)
-        forme = DAO.getForme(anno_sel)
-        for forma in forme:
-            self._view.ddshape.options.append(ft.dropdown.Option(forma))
-        self._view.update_page()
 
-    def handle_graph(self, e):
-        anno_sel = self._view.ddyear.value
-        forma = self._view.ddshape.value
-        if forma is None:
-            pass
-        grafo = self._model.buildGraph(anno_sel,forma)
-        self._view.txt_result.controls.append(ft.Text(f"Grafo con {len(grafo.nodes)} vertici e {len(grafo.edges)} archi"))
-        self._view.update_page()
-        diz = self._model.analizza()
-        for stato in diz:
-            self._view.txt_result.controls.append(ft.Text(f"Nodo {stato}, somma pesi {diz[stato]}"))
-        self._view.update_page()
+    def handle_graph(self,e):
+        data = self._view.txt_anno.value
+        giorni = self._view.txt_giorni.value
+        try:
+            dataInt= int(data)
+            if dataInt <1906 or dataInt>2014:
+                self._view.txt_result.controls.append(ft.Text("Data deve essere compresa tra 1906 e 2014", color="red"))
+                self._view.update_page()
+
+            xG = int(giorni)
+            if xG<1 or xG >180:
+                self._view.txt_result.controls.append(ft.Text("Data deve essere compresa tra 1 e 180", color="red"))
+                self._view.update_page()
+            grafo = self._model.buildGraph(dataInt, xG)
+            self._view.txt_result.controls.append(ft.Text(f"{grafo}"))
+            self._view.update_page()
+
+            diz = self._model.adiacenti()
+            for chiave in diz:
+                self._view.txt_result.controls.append(ft.Text(f"stato {chiave} somma adiacenti: {diz[chiave]}"))
+            self._view.update_page()
 
 
-    def handle_path(self, e):
-        pass
+        except ValueError :
+            self._view.txt_result.controls.append(ft.Text("Scrivere dei numeri",color="red"))
+            self._view.update_page()
+
